@@ -3,6 +3,9 @@ package eu.skyrex;
 import eu.skyrex.commands.StopCommand;
 import eu.skyrex.commands.TestCommand;
 import eu.skyrex.files.ServerProperties;
+import eu.skyrex.game.GameCommand;
+import eu.skyrex.game.GameManager;
+import eu.skyrex.game.GameOnChat;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
@@ -27,11 +30,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
+    private static GameManager gameManager;
+
     public static void main(String[] args) throws IOException {
         Logger logger = LoggerFactory.getLogger(Main.class);
         // Initialization
         MinecraftServer minecraftServer = MinecraftServer.init();
         ServerProperties serverProperties = new ServerProperties();
+        gameManager = new GameManager();
 
         // Create the instance
         InstanceManager instanceManager = MinecraftServer.getInstanceManager();
@@ -61,10 +67,13 @@ public class Main {
             responseData.setDescription(Component.text("PaintIT"));
         });
 
+        globalEventHandler.addListener(new GameOnChat());
+
         MinecraftServer.setBrandName("PaintIT");
 
         MinecraftServer.getCommandManager().register(new StopCommand());
         MinecraftServer.getCommandManager().register(new TestCommand(instanceContainer));
+        MinecraftServer.getCommandManager().register(new GameCommand());
 
         MojangAuth.init();
 
@@ -79,5 +88,9 @@ public class Main {
             CommandSender sender = new ConsoleSender();
             MinecraftServer.getCommandManager().execute(sender, line);
         }
+    }
+
+    public static GameManager getGameManager() {
+        return gameManager;
     }
 }
