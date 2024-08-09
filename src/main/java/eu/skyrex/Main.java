@@ -7,6 +7,7 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
+import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.block.Block;
@@ -28,9 +29,13 @@ public class Main {
         globalEventHandler.addListener(AsyncPlayerConfigurationEvent.class, event -> {
             final Player player = event.getPlayer();
             event.setSpawningInstance(instanceContainer);
+            player.setRespawnPoint(new Pos(0, 42, 0));
+        });
+
+        globalEventHandler.addListener(PlayerSpawnEvent.class, event -> {
+            final Player player = event.getPlayer();
             player.setAllowFlying(true);
             player.setFlying(true);
-            player.setRespawnPoint(new Pos(0, 42, 0));
         });
 
         MinecraftServer.getCommandManager().register(new StopCommand());
