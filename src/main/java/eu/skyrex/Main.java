@@ -8,8 +8,10 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
+import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
+import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.block.Block;
 
 public class Main {
@@ -23,7 +25,8 @@ public class Main {
 
         // Set the ChunkGenerator
         instanceContainer.setGenerator(unit -> unit.modifier().fillHeight(0, 40, Block.GRASS_BLOCK));
-
+        instanceContainer.setChunkSupplier(LightingChunk::new);
+        
         // Add an event callback to specify the spawning instance (and the spawn position)
         GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
         globalEventHandler.addListener(AsyncPlayerConfigurationEvent.class, event -> {
@@ -40,6 +43,8 @@ public class Main {
 
         MinecraftServer.getCommandManager().register(new StopCommand());
         MinecraftServer.getCommandManager().register(new TestCommand(instanceContainer));
+
+        MojangAuth.init();
 
         // Start the server on port 25565
         minecraftServer.start("0.0.0.0", 25565);
