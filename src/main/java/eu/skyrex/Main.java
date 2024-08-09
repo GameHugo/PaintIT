@@ -3,6 +3,7 @@ package eu.skyrex;
 import eu.skyrex.commands.StopCommand;
 import eu.skyrex.commands.TestCommand;
 import eu.skyrex.files.ServerProperties;
+import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.ConsoleSender;
@@ -11,11 +12,13 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
+import net.minestom.server.event.server.ServerListPingEvent;
 import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.block.Block;
+import net.minestom.server.ping.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +31,7 @@ public class Main {
         Logger logger = LoggerFactory.getLogger(Main.class);
         // Initialization
         MinecraftServer minecraftServer = MinecraftServer.init();
+        ServerProperties serverProperties = new ServerProperties();
 
         // Create the instance
         InstanceManager instanceManager = MinecraftServer.getInstanceManager();
@@ -51,12 +55,18 @@ public class Main {
             player.setFlying(true);
         });
 
+        globalEventHandler.addListener(ServerListPingEvent.class, event -> {
+            ResponseData responseData = event.getResponseData();
+            responseData.setMaxPlayer(69);
+            responseData.setDescription(Component.text("PaintIT"));
+        });
+
+        MinecraftServer.setBrandName("PaintIT");
+
         MinecraftServer.getCommandManager().register(new StopCommand());
         MinecraftServer.getCommandManager().register(new TestCommand(instanceContainer));
 
         MojangAuth.init();
-
-        ServerProperties serverProperties = new ServerProperties();
 
         // Start the server
         minecraftServer.start(serverProperties.getIp(), serverProperties.getPort());
