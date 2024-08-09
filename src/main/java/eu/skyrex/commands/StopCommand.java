@@ -8,11 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class StopCommand extends Command {
 
-
     public StopCommand() {
         super("stop");
 
-        //setCondition((sender, commandString) -> sender.hasPermission("server.stop"));
+        //setCondition((sender, commandString) -> sender.hasPermission("server.stop") || sender instanceof ConsoleSender);
 
         setDefaultExecutor((sender, context) -> {
             sender.sendMessage("Stopping the server...");
