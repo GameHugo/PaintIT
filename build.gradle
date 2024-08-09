@@ -1,12 +1,18 @@
 plugins {
     id 'java'
+    id "io.github.goooler.shadow" version "8.1.7"
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 group = 'eu.skyrex'
 version = '1.0-SNAPSHOT'
 
-repositories {
-    mavenCentral()
+dependencies {
+    implementation 'net.minestom:minestom-snapshots:461c56e749'
 }
 
 dependencies {
@@ -16,4 +22,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        // Change this to your main class
+        attributes 'Main-Class': 'eu.skyrex.Main'
+    }
 }
