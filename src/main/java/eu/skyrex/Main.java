@@ -1,5 +1,6 @@
 package eu.skyrex;
 
+import eu.skyrex.commands.StopCommand;
 import eu.skyrex.commands.TestCommand;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
@@ -32,6 +33,7 @@ public class Main {
             player.setRespawnPoint(new Pos(0, 42, 0));
         });
 
+        MinecraftServer.getCommandManager().register(new StopCommand());
         MinecraftServer.getCommandManager().register(new TestCommand(instanceContainer));
 
         // Start the server on port 25565
