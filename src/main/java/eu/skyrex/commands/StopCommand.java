@@ -12,6 +12,8 @@ public class StopCommand extends Command {
     public StopCommand() {
         super("stop");
 
+        //setCondition((sender, commandString) -> sender.hasPermission("server.stop"));
+
         setDefaultExecutor((sender, context) -> {
             sender.sendMessage("Stopping the server...");
             for (@NotNull Instance instance : MinecraftServer.getInstanceManager().getInstances()) {
