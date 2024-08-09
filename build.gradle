@@ -13,11 +13,9 @@ version = '1.0-SNAPSHOT'
 
 dependencies {
     implementation 'net.minestom:minestom-snapshots:461c56e749'
-    implementation("org.slf4j:slf4j-api:2.0.13")
-    implementation("ch.qos.logback:logback-classic:1.5.6")
-}
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+    implementation 'ch.qos.logback:logback-classic:1.5.6'
 
-dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
@@ -28,7 +26,6 @@ test {
 
 jar {
     manifest {
-        // Change this to your main class
         attributes 'Main-Class': 'eu.skyrex.Main'
     }
 }
