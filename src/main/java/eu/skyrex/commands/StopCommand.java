@@ -17,7 +17,7 @@ public class StopCommand extends Command {
             sender.sendMessage("Stopping the server...");
             for (@NotNull Instance instance : MinecraftServer.getInstanceManager().getInstances()) {
                 for (@NotNull Player player : instance.getPlayers()) {
-                    player.kick("Server is restarting");
+                    player.kick("Server closed");
                 }
             }
 

@@ -6,6 +6,7 @@ import eu.skyrex.files.ServerProperties;
 import eu.skyrex.game.GameCommand;
 import eu.skyrex.game.GameManager;
 import eu.skyrex.game.GameOnChat;
+import eu.skyrex.maps.CanvasManager;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
@@ -31,9 +32,13 @@ import java.io.InputStreamReader;
 
 public class Main {
     private static GameManager gameManager;
+    private static CanvasManager canvasManager;
 
     public static void main(String[] args) throws IOException {
         Logger logger = LoggerFactory.getLogger(Main.class);
+
+        final long startTime = System.currentTimeMillis();
+
         // Initialization
         MinecraftServer minecraftServer = MinecraftServer.init();
         ServerProperties serverProperties = new ServerProperties();
@@ -47,6 +52,8 @@ public class Main {
         instanceContainer.setGenerator(unit -> unit.modifier().fillHeight(0, 40, Block.GRASS_BLOCK));
         instanceContainer.setChunkSupplier(LightingChunk::new);
 
+        canvasManager = new CanvasManager(instanceContainer);
+
         // Add an event callback to specify the spawning instance (and the spawn position)
         GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
         globalEventHandler.addListener(AsyncPlayerConfigurationEvent.class, event -> {
@@ -59,6 +66,7 @@ public class Main {
             final Player player = event.getPlayer();
             player.setAllowFlying(true);
             player.setFlying(true);
+            canvasManager.sendPackets(player);
         });
 
         globalEventHandler.addListener(ServerListPingEvent.class, event -> {
@@ -79,7 +87,7 @@ public class Main {
 
         // Start the server
         minecraftServer.start(serverProperties.getIp(), serverProperties.getPort());
-        logger.info("Server started on {}:{}", serverProperties.getIp(), serverProperties.getPort());
+        logger.info("Server started on {}:{} in {}ms", serverProperties.getIp(), serverProperties.getPort(), System.currentTimeMillis() - startTime);
 
         // Allow console input
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -92,5 +100,9 @@ public class Main {
 
     public static GameManager getGameManager() {
         return gameManager;
+    }
+
+    public static CanvasManager getCanvasManager() {
+        return canvasManager;
     }
 }
