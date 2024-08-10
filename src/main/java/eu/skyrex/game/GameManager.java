@@ -1,6 +1,8 @@
 package eu.skyrex.game;
 
+import eu.skyrex.Main;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.timer.Scheduler;
@@ -64,9 +66,15 @@ public class GameManager {
         players.clear();
         correctPlayers.clear();
         players.addAll(MinecraftServer.getConnectionManager().getOnlinePlayers());
+
+        final Player drawer = players.get(random.nextInt(players.size()));
+        Main.getCanvasManager().setPainter(drawer);
+        correctPlayers.add(drawer);
+
         currentWord = words.get(random.nextInt(words.size()));
         previewWord = "_ ".repeat(currentWord.length());
-        sendMessageToAllPlayers("The game has started!");
+
+        sendMessageToAllPlayers("<yellow>" + drawer.getUsername() + " is drawing!");
         logger.info("The current word is: {}", currentWord);
         for (Player player : players) {
             sendGameActionBar(player);
@@ -76,7 +84,7 @@ public class GameManager {
     public void stopGame() {
         if (!gameStarted) return;
         gameStarted = false;
-        sendMessageToAllPlayers("The game has been stopped!");
+        sendMessageToAllPlayers("<red>The game has been stopped!");
         sendActionBarToAllPlayers(null);
     }
 
@@ -84,8 +92,8 @@ public class GameManager {
         if (!gameStarted) return false;
         if (guess.equalsIgnoreCase(currentWord)) {
             correctPlayers.add(player);
-            player.sendMessage("Correct!");
-            sendMessageToAllPlayers(player.getUsername() + " has guessed the word!");
+            player.sendMessage(MiniMessage.miniMessage().deserialize("<green>Correct!"));
+            sendMessageToAllPlayers("<green>" + player.getUsername() + " has guessed the word!");
             sendGameActionBar(player);
             if(correctPlayers.size() == players.size()) {
                 stopGame();
@@ -96,27 +104,29 @@ public class GameManager {
     }
 
     public void sendMessageToAllPlayers(String message) {
+        Component msg = MiniMessage.miniMessage().deserialize(message);
         for (Player player : players) {
-            player.sendMessage(message);
+            player.sendMessage(msg);
         }
     }
 
     public void sendActionBarToAllPlayers(String message) {
+        Component msg = message == null ? Component.empty() : MiniMessage.miniMessage().deserialize(message);
         for (Player player : players) {
             if (message == null) {
-                player.sendActionBar(Component.empty());
+                player.sendActionBar(msg);
                 return;
             }
-            player.sendActionBar(Component.text(message));
+            player.sendActionBar(msg);
         }
     }
 
     public void sendGameActionBar(Player player) {
         if(correctPlayers.contains(player)) {
-            player.sendActionBar(Component.text("Guess the word: " + currentWord + " (" + timeLeft + ")"));
+            player.sendActionBar(MiniMessage.miniMessage().deserialize("<yellow>The word is: <green>" + currentWord + " <gray>(" + timeLeft + ")"));
             return;
         }
-        player.sendActionBar(Component.text("Guess the word: " + previewWord + " (" + timeLeft + ")"));
+        player.sendActionBar(MiniMessage.miniMessage().deserialize("<yellow>Guess the word: " + previewWord + " <gray>(" + timeLeft + ")"));
     }
 
     public boolean playerCorrect(Player player) {
