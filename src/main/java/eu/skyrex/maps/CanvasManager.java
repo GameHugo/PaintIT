@@ -56,7 +56,7 @@ public class CanvasManager {
 
         renderedImage = null;
 
-        snapshotImage();
+        snapshotImage(true);
     }
 
     public void setupCanvas() {
@@ -84,7 +84,7 @@ public class CanvasManager {
         getGraphics().setColor(Color.WHITE);
         getGraphics().fillRect(0, 0, 128 * width, 128 * height);
 
-        snapshotImage();
+        snapshotImage(true);
 
         MinecraftServer.getSchedulerManager().scheduleTask(() -> {
             if (!drawn) return;
@@ -174,19 +174,20 @@ public class CanvasManager {
     }
 
     public void use(Pixel pos) {
-        if (!tool.onUse(this, pos)) return;
-        snapshotImage();
+        snapshotImage(tool.onUse(this, pos));
     }
 
     public Stack<BufferedImage> getChangeStack() {
         return renderedImage;
     }
 
-    private void snapshotImage() {
+    private void snapshotImage(boolean createNew) {
         if(renderedImage == null) {
             renderedImage = new Stack<>(new BufferedImage(width * 128, height * 128, BufferedImage.TYPE_INT_RGB));
-        } else {
+        } else if(createNew) {
             renderedImage = renderedImage.append(new BufferedImage(width * 128, height * 128, BufferedImage.TYPE_INT_RGB));
+        } else {
+            renderedImage.setValue(new BufferedImage(width * 128, height * 128, BufferedImage.TYPE_INT_RGB));
         }
         final Graphics2D graphics = renderedImage.getValue().createGraphics();
         graphics.drawImage(buf.getBackingImage(), 0, 0, null);
