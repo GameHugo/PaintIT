@@ -23,7 +23,6 @@ public class TestCommand extends Command {
             graphics.setColor(Color.RED);
             graphics.fillOval(random.nextInt(1920), random.nextInt(1080), 100, 100);
             Main.getCanvasManager().sendPackets();
-
         });
 
     }

@@ -1,7 +1,9 @@
 package eu.skyrex;
 
+import eu.skyrex.commands.ColorCommand;
 import eu.skyrex.commands.StopCommand;
 import eu.skyrex.commands.TestCommand;
+import eu.skyrex.commands.ToolCommand;
 import eu.skyrex.files.ServerProperties;
 import eu.skyrex.game.GameCommand;
 import eu.skyrex.game.GameManager;
@@ -71,6 +73,7 @@ public class Main {
             player.setFlying(true);
             canvasManager.sendPackets(player);
             player.getInventory().setItemInMainHand(ItemStack.of(Material.STICK));
+            canvasManager.setPainter(player);
         });
 
         globalEventHandler.addListener(ServerListPingEvent.class, event -> {
@@ -80,13 +83,15 @@ public class Main {
         });
 
         globalEventHandler.addListener(new GameOnChat());
-        globalEventHandler.addListener(new PaintEvent());
+        globalEventHandler.addListener(new PaintEvent(canvasManager));
 
         MinecraftServer.setBrandName("PaintIT");
 
         MinecraftServer.getCommandManager().register(new StopCommand());
         MinecraftServer.getCommandManager().register(new TestCommand(instanceContainer));
         MinecraftServer.getCommandManager().register(new GameCommand());
+        MinecraftServer.getCommandManager().register(new ColorCommand());
+        MinecraftServer.getCommandManager().register(new ToolCommand());
 
         MojangAuth.init();
 

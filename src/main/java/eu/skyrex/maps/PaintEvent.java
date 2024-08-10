@@ -1,15 +1,19 @@
 package eu.skyrex.maps;
 
-import eu.skyrex.Main;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerUseItemEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
-
 public class PaintEvent implements EventListener<PlayerUseItemEvent> {
+
+    private final CanvasManager canvasManager;
+
+    public PaintEvent(CanvasManager canvasManager) {
+        this.canvasManager = canvasManager;
+    }
+
     @Override
     public @NotNull Class<PlayerUseItemEvent> eventType() {
         return PlayerUseItemEvent.class;
@@ -33,13 +37,11 @@ public class PaintEvent implements EventListener<PlayerUseItemEvent> {
         if(intersection.y() < 43) return Result.INVALID;
         if(intersection.y() > 54) return Result.INVALID;
 
-        final int x = (int) (intersection.x() * 128) - 64;
-        final int y = (int) (1152 - (intersection.y() - 43) * 128);
+        final int x = (int) (intersection.x() * 128);
+        final int y = (int) (1152 - (intersection.y() - 43.5) * 128);
 
-        final Graphics2D graphics = Main.getCanvasManager().getGraphics();
-        graphics.setColor(Color.RED);
-        graphics.fillOval(x, y, 100, 100);
-        Main.getCanvasManager().sendPackets();
+        canvasManager.use(new Pixel(x, y));
+
         return Result.SUCCESS;
     }
 }
