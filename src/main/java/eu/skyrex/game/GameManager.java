@@ -86,6 +86,10 @@ public class GameManager {
         gameStarted = false;
         sendMessageToAllPlayers("<red>The game has been stopped!");
         sendActionBarToAllPlayers(null);
+
+        Main.getCanvasManager().setPainter(null);
+
+        MinecraftServer.getConnectionManager().getOnlinePlayers().forEach(player -> player.getInventory().clear());
     }
 
     public boolean playerGuess(Player player, String guess) {

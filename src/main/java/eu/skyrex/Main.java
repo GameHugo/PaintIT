@@ -10,6 +10,7 @@ import eu.skyrex.game.GameManager;
 import eu.skyrex.game.GameOnChat;
 import eu.skyrex.maps.CanvasManager;
 import eu.skyrex.maps.PaintEvent;
+import eu.skyrex.maps.tools.ToolLoadout;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
@@ -25,8 +26,6 @@ import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.LightingChunk;
 import net.minestom.server.instance.block.Block;
-import net.minestom.server.item.ItemStack;
-import net.minestom.server.item.Material;
 import net.minestom.server.ping.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,8 +71,6 @@ public class Main {
             player.setAllowFlying(true);
             player.setFlying(true);
             canvasManager.sendPackets(player);
-            player.getInventory().setItemInMainHand(ItemStack.of(Material.STICK));
-            canvasManager.setPainter(player);
         });
 
         globalEventHandler.addListener(ServerListPingEvent.class, event -> {
@@ -84,6 +81,7 @@ public class Main {
 
         globalEventHandler.addListener(new GameOnChat());
         globalEventHandler.addListener(new PaintEvent(canvasManager));
+        globalEventHandler.addListener(new ToolLoadout());
 
         MinecraftServer.setBrandName("PaintIT");
 

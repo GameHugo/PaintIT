@@ -1,6 +1,7 @@
 package eu.skyrex.maps;
 
 import eu.skyrex.maps.tools.BrushTool;
+import eu.skyrex.maps.tools.ToolLoadout;
 import eu.skyrex.util.Stack;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
@@ -159,6 +160,7 @@ public class CanvasManager {
 
     public void setPainter(Player painter) {
         this.player = new WeakReference<>(painter);
+        if(painter != null) ToolLoadout.add(painter);
     }
 
     public Color getCurrentColor() {

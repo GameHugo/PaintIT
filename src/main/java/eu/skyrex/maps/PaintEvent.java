@@ -23,6 +23,7 @@ public class PaintEvent implements EventListener<PlayerUseItemEvent> {
     public @NotNull Result run(@NotNull PlayerUseItemEvent event) {
 
         final Player player = event.getPlayer();
+        if(!player.equals(canvasManager.getPainter())) return Result.INVALID;
 
         if(player.getPosition().z() <= 0) return Result.INVALID;
 
