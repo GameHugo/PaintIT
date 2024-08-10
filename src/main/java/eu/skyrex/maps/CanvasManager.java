@@ -99,7 +99,7 @@ public class CanvasManager {
                 return;
             }
             tool.tick(this, target);
-        }, TaskSchedule.nextTick(), TaskSchedule.tick(10), ExecutionType.TICK_START);
+        }, TaskSchedule.nextTick(), TaskSchedule.tick(2), ExecutionType.TICK_START);
     }
 
     public Graphics2D getGraphics() {

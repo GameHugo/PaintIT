@@ -8,7 +8,9 @@ public enum Tool {
     BRUSH(BrushTool::new),
     RECTANGLE(RectTool::new),
     UNDO(UndoTool::new),
-    REDO(RedoTool::new);
+    REDO(RedoTool::new),
+    LINE(LineTool::new),
+    ELLIPSE(EllipseTool::new),;
 
     private final Supplier<PaintTool> toolSupplier;
 
