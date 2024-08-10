@@ -1,6 +1,7 @@
 package eu.skyrex.maps;
 
 import eu.skyrex.maps.tools.BrushTool;
+import eu.skyrex.util.Stack;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -37,7 +38,7 @@ public class CanvasManager {
 
     private WeakReference<Player> player = new WeakReference<>(null);
     private boolean drawn = false;
-    private BufferedImage renderedImage;
+    private Stack<BufferedImage> renderedImage;
     private PaintTool tool = new BrushTool();
 
     private final Instance instance;
@@ -52,6 +53,9 @@ public class CanvasManager {
         getGraphics().setColor(Color.WHITE);
         getGraphics().fillRect(0, 0, 128 * width, 128 * height);
         sendPackets();
+
+        renderedImage = null;
+
         snapshotImage();
     }
 
@@ -86,7 +90,7 @@ public class CanvasManager {
             if (!drawn) return;
             sendPackets();
             drawn = false;
-            buf.getRenderer().drawImage(renderedImage, 0, 0, null);
+            buf.getRenderer().drawImage(renderedImage.getValue(), 0, 0, null);
         }, TaskSchedule.nextTick(), TaskSchedule.nextTick(), ExecutionType.TICK_END);
 
         MinecraftServer.getSchedulerManager().scheduleTask(() -> {
@@ -174,11 +178,32 @@ public class CanvasManager {
         snapshotImage();
     }
 
-    private void snapshotImage() {
-        renderedImage = new BufferedImage(width * 128, height * 128, BufferedImage.TYPE_INT_RGB);
+    public Stack<BufferedImage> getChangeStack() {
+        return renderedImage;
+    }
 
-        final Graphics2D graphics = renderedImage.createGraphics();
+    private void snapshotImage() {
+        if(renderedImage == null) {
+            renderedImage = new Stack<>(new BufferedImage(width * 128, height * 128, BufferedImage.TYPE_INT_RGB));
+        } else {
+            renderedImage = renderedImage.append(new BufferedImage(width * 128, height * 128, BufferedImage.TYPE_INT_RGB));
+        }
+        final Graphics2D graphics = renderedImage.getValue().createGraphics();
         graphics.drawImage(buf.getBackingImage(), 0, 0, null);
         graphics.dispose();
+    }
+
+    public boolean undo() {
+        if(renderedImage.getParent() == null) return false;
+        renderedImage = renderedImage.getParent();
+        getGraphics().drawImage(renderedImage.getValue(), 0, 0, null);
+        return true;
+    }
+
+    public boolean redo() {
+        if(renderedImage.getChild() == null) return false;
+        renderedImage = renderedImage.getChild();
+        getGraphics().drawImage(renderedImage.getValue(), 0, 0, null);
+        return true;
     }
 }

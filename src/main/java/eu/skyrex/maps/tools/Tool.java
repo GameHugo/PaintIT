@@ -6,7 +6,9 @@ import java.util.function.Supplier;
 
 public enum Tool {
     BRUSH(BrushTool::new),
-    RECTANGLE(RectTool::new);
+    RECTANGLE(RectTool::new),
+    UNDO(UndoTool::new),
+    REDO(RedoTool::new);
 
     private final Supplier<PaintTool> toolSupplier;
 

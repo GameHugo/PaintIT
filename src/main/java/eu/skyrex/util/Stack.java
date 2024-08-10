@@ -10,6 +10,14 @@ public class Stack<T> {
         this.value = value;
     }
 
+    /**
+     * Appends a new value to the stack
+     *
+     * If this instance already has a child, this child will be discarded.
+     *
+     * @param value the value to append
+     * @return the new stack
+     */
     public Stack<T> append(T value) {
         Stack<T> stack = new Stack<>(value);
         stack.parent = this;
