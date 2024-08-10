@@ -12,7 +12,7 @@ public class TestCommand extends Command {
         super("test");
 
         setDefaultExecutor((sender, context) -> {
-            sender.sendMessage("Hello, World!");
+            Main.getCanvasManager().clearCanvas();
         });
 
         Random random = new Random();

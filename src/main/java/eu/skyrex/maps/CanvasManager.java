@@ -24,7 +24,7 @@ public class CanvasManager {
 
     private final int width = 16;
     private final int height = 9;
-    private static final Logger logger = LoggerFactory.getLogger(CanvasManager.class);
+    public static final Logger logger = LoggerFactory.getLogger(CanvasManager.class);
 
 
     private final Instance instance;
@@ -33,6 +33,12 @@ public class CanvasManager {
     public CanvasManager(final Instance instance) {
         this.instance = instance;
         setupCanvas();
+    }
+
+    public void clearCanvas() {
+        getGraphics().setColor(Color.WHITE);
+        getGraphics().fillRect(0, 0, 128 * width, 128 * height);
+        sendPackets();
     }
 
     public void setupCanvas() {
