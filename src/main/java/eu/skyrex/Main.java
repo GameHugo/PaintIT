@@ -1,6 +1,7 @@
 package eu.skyrex;
 
 import eu.skyrex.commands.ColorCommand;
+import eu.skyrex.commands.HeapCommand;
 import eu.skyrex.commands.StopCommand;
 import eu.skyrex.commands.TestCommand;
 import eu.skyrex.commands.ToolCommand;
@@ -9,6 +10,8 @@ import eu.skyrex.game.GameCommand;
 import eu.skyrex.game.GameManager;
 import eu.skyrex.game.GameOnChat;
 import eu.skyrex.maps.CanvasManager;
+import eu.skyrex.maps.ColorEvent;
+import eu.skyrex.maps.ColorPallete;
 import eu.skyrex.maps.PaintEvent;
 import eu.skyrex.maps.tools.ToolLoadout;
 import net.kyori.adventure.text.Component;
@@ -16,6 +19,7 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.ConsoleSender;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
@@ -60,6 +64,7 @@ public class Main {
         instanceContainer.setChunkSupplier(LightingChunk::new);
 
         canvasManager = new CanvasManager(instanceContainer);
+        final ColorPallete pallete = new ColorPallete(canvasManager, instanceContainer);
 
         // Add an event callback to specify the spawning instance (and the spawn position)
         GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
@@ -71,9 +76,11 @@ public class Main {
 
         globalEventHandler.addListener(PlayerSpawnEvent.class, event -> {
             final Player player = event.getPlayer();
+            player.setGameMode(GameMode.ADVENTURE);
             player.setAllowFlying(true);
             player.setFlying(true);
             canvasManager.sendPackets(player);
+            pallete.sendPackets(player);
         });
 
         globalEventHandler.addListener(ServerListPingEvent.class, event -> {
@@ -85,6 +92,7 @@ public class Main {
         globalEventHandler.addListener(new GameOnChat());
         globalEventHandler.addListener(new PaintEvent(canvasManager));
         globalEventHandler.addListener(new ToolLoadout());
+        globalEventHandler.addListener(new ColorEvent(canvasManager, pallete));
 
         MinecraftServer.setBrandName("PaintIT");
 
@@ -93,6 +101,7 @@ public class Main {
         MinecraftServer.getCommandManager().register(new GameCommand());
         MinecraftServer.getCommandManager().register(new ColorCommand());
         MinecraftServer.getCommandManager().register(new ToolCommand());
+        MinecraftServer.getCommandManager().register(new HeapCommand());
 
         MojangAuth.init();
 

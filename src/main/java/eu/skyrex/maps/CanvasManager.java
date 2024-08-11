@@ -41,6 +41,7 @@ public class CanvasManager {
     private boolean drawn = false;
     private Stack<BufferedImage> renderedImage;
     private PaintTool tool = new BrushTool();
+    private int strokeWidth = 1;
 
     private final Instance instance;
     private final LargeGraphics2DFramebuffer buf = new LargeGraphics2DFramebuffer(128 * width, 128 * height);
@@ -105,7 +106,7 @@ public class CanvasManager {
                 return;
             }
             tool.tick(this, target);
-        }, TaskSchedule.nextTick(), TaskSchedule.tick(2), ExecutionType.TICK_START);
+        }, TaskSchedule.nextTick(), TaskSchedule.tick(10), ExecutionType.TICK_START);
     }
 
     public Graphics2D getGraphics() {
@@ -148,12 +149,12 @@ public class CanvasManager {
         final double factor = pos.z() / Math.abs(direction.z());
         final Pos intersection = pos.add(direction.mul(factor));
 
-        if (intersection.x() < 0) return null;
-        if (intersection.x() >= width) return null;
+        if (intersection.x() < 1) return null;
+        if (intersection.x() >= width + 1) return null;
         if (intersection.y() < 43) return null;
         if (intersection.y() > 54) return null;
 
-        final int x = (int) (intersection.x() * 128);
+        final int x = (int) ((intersection.x() - 1) * 128);
         final int y = (int) (1152 - (intersection.y() - 43.5) * 128);
 
         return new Pixel(x, y);
