@@ -80,7 +80,16 @@ public class GameManager {
         correctPlayers.add(drawer);
 
         currentWord = getWord();
-        previewWord = "_ ".repeat(currentWord.length());
+        StringBuilder previewWordSB = new StringBuilder();  // Initialize a StringBuilder
+        for (int i = 0; i < currentWord.length(); i++) {
+            if (currentWord.charAt(i) == ' ') {
+                previewWordSB.append("  ");  // Append two spaces for the space in the word
+            } else {
+                previewWordSB.append("_ ");  // Append underscore followed by a space
+            }
+        }
+
+        previewWord = previewWordSB.toString();
 
         sendMessageToAllPlayers("<yellow>" + drawer.getUsername() + " is drawing!");
         logger.info("The current word is: {}", currentWord);
