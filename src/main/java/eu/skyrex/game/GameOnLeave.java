@@ -16,6 +16,10 @@ public class GameOnLeave implements EventListener<PlayerDisconnectEvent> {
     public @NotNull Result run(@NotNull PlayerDisconnectEvent event) {
         Main.getGameManager().removeFromSidebar(event.getPlayer());
         Main.getGameManager().sendMessageToAllPlayers("<yellow>"+event.getPlayer().getUsername() + " left the game!");
+        if(Main.getGameManager().getDrawer() == event.getPlayer()) {
+            Main.getGameManager().sendMessageToAllPlayers("<red>The drawer left the game! The game will be skipped! The word was: "+Main.getGameManager().getCurrentWord());
+            Main.getGameManager().nextGame();
+        }
         return Result.SUCCESS;
     }
 }

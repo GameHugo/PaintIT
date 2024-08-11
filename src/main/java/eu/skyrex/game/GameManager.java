@@ -36,6 +36,7 @@ public class GameManager {
 
     private int timeLeft;
     private final List<Player> playersDrawn = new ArrayList<>();
+    private Player drawer;
 
     private final Random random = new Random();
     Logger logger = LoggerFactory.getLogger(GameManager.class);
@@ -102,7 +103,7 @@ public class GameManager {
 
         List<Player> players = new ArrayList<>(MinecraftServer.getConnectionManager().getOnlinePlayers());
 
-        Player drawer = null;
+        drawer = null;
         for (Player player : players) {
             if (!playersDrawn.contains(player)) {
                 drawer = player;
@@ -237,6 +238,10 @@ public class GameManager {
 
     public boolean playerCorrect(Player player) {
         return correctPlayers.contains(player);
+    }
+
+    public Player getDrawer() {
+        return drawer;
     }
 
     public boolean isGameStarted() {
