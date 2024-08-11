@@ -1,6 +1,7 @@
 package eu.skyrex.game;
 
 import eu.skyrex.Main;
+import eu.skyrex.maps.tools.BrushTool;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -116,7 +117,11 @@ public class GameManager {
         correctPlayers.add(drawer);
         playersDrawn.add(drawer);
 
-        Main.getCanvasManager().clearCanvas();
+        Main.getCanvasManager().setTool(new BrushTool());
+        MinecraftServer.getSchedulerManager().buildTask(() ->
+                Main.getCanvasManager().clearCanvas()).delay(TaskSchedule.nextTick())
+                .schedule();
+
 
         currentWord = getWord();
         StringBuilder previewWordSB = new StringBuilder();  // Initialize a StringBuilder
