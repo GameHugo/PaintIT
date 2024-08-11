@@ -61,6 +61,11 @@ public class CanvasManager {
     }
 
     public void setupCanvas() {
+
+        new HashSet<>(instance.getEntities()).forEach(e -> {
+            if(e.getEntityMeta() instanceof ItemFrameMeta) e.remove();
+        });
+
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 Entity itemFrame = new Entity(EntityType.ITEM_FRAME);
