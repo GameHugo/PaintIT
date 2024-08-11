@@ -1,10 +1,12 @@
 package eu.skyrex.game;
 
 import eu.skyrex.Main;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
+import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.TaskSchedule;
 import org.slf4j.Logger;
@@ -33,7 +35,6 @@ public class GameManager {
     Logger logger = LoggerFactory.getLogger(GameManager.class);
 
     public GameManager() {
-
         final File file = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile();
         wordsFile = new File(file, "words.txt");
 
@@ -58,6 +59,7 @@ public class GameManager {
                     if (!indexes.isEmpty()) {
                         int index = indexes.get(random.nextInt(indexes.size()));
                         previewWord = previewWord.substring(0, index * 2) + currentWord.charAt(index) + previewWord.substring(index * 2 + 1);
+                        playSoundEffect(SoundEvent.BLOCK_NOTE_BLOCK_CHIME);
                     }
                 }
                 for (Player player : players) {
@@ -79,6 +81,8 @@ public class GameManager {
         Main.getCanvasManager().setPainter(drawer);
         correctPlayers.add(drawer);
 
+        Main.getCanvasManager().clearCanvas();
+
         currentWord = getWord();
         StringBuilder previewWordSB = new StringBuilder();  // Initialize a StringBuilder
         for (int i = 0; i < currentWord.length(); i++) {
@@ -96,6 +100,7 @@ public class GameManager {
         for (Player player : players) {
             sendGameActionBar(player);
         }
+        playSoundEffect(SoundEvent.ENTITY_ARROW_HIT_PLAYER);
     }
 
     public void stopGame() {
@@ -148,6 +153,12 @@ public class GameManager {
             return;
         }
         player.sendActionBar(MiniMessage.miniMessage().deserialize("<yellow>Guess the word: " + previewWord + " <gray>(" + timeLeft + ")"));
+    }
+
+    public void playSoundEffect(SoundEvent sound) {
+        for (Player player : players) {
+            player.playSound(Sound.sound(sound, Sound.Source.RECORD, 1f, 1f));
+        }
     }
 
     public String getWord() {
