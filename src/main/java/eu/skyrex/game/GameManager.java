@@ -10,12 +10,17 @@ import net.minestom.server.timer.TaskSchedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class GameManager {
 
+    private final File wordsFile;
     private final List<String> words = List.of("apple", "banana", "cherry", "date", "elderberry", "fig", "grape", "honeydew", "kiwi", "lemon", "mango", "nectarine", "orange", "papaya", "quince", "raspberry", "strawberry", "tangerine", "watermelon");
     private boolean gameStarted = false;
     private String currentWord;
@@ -29,6 +34,10 @@ public class GameManager {
     Logger logger = LoggerFactory.getLogger(GameManager.class);
 
     public GameManager() {
+
+        final File file = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile();
+        wordsFile = new File(file, "words.txt");
+
         Scheduler scheduler = MinecraftServer.getSchedulerManager();
 
         scheduler.buildTask(() -> {
@@ -71,7 +80,7 @@ public class GameManager {
         Main.getCanvasManager().setPainter(drawer);
         correctPlayers.add(drawer);
 
-        currentWord = words.get(random.nextInt(words.size()));
+        currentWord = getWord();
         previewWord = "_ ".repeat(currentWord.length());
 
         sendMessageToAllPlayers("<yellow>" + drawer.getUsername() + " is drawing!");
@@ -131,6 +140,17 @@ public class GameManager {
             return;
         }
         player.sendActionBar(MiniMessage.miniMessage().deserialize("<yellow>Guess the word: " + previewWord + " <gray>(" + timeLeft + ")"));
+    }
+
+    public String getWord() {
+        try (FileInputStream stream = new FileInputStream(wordsFile);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+            long length = reader.lines().count();
+            stream.getChannel().position(0);
+            return reader.lines().skip(random.nextLong(length)).findFirst().orElseThrow();
+        } catch (Exception e) {
+            throw new RuntimeException("Could not find a word. Please add a words.txt file to the server directory.", e);
+        }
     }
 
     public boolean playerCorrect(Player player) {
