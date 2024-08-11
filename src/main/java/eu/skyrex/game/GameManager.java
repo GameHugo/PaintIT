@@ -21,7 +21,6 @@ import java.util.Random;
 public class GameManager {
 
     private final File wordsFile;
-    private final List<String> words = List.of("apple", "banana", "cherry", "date", "elderberry", "fig", "grape", "honeydew", "kiwi", "lemon", "mango", "nectarine", "orange", "papaya", "quince", "raspberry", "strawberry", "tangerine", "watermelon");
     private boolean gameStarted = false;
     private String currentWord;
     private String previewWord;
@@ -159,10 +158,6 @@ public class GameManager {
 
     public boolean isGameStarted() {
         return gameStarted;
-    }
-
-    public List<String> getWordsList() {
-        return words;
     }
 
     public String getCurrentWord() {
