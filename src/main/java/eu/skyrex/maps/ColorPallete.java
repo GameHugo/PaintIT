@@ -1,5 +1,6 @@
 package eu.skyrex.maps;
 
+import eu.skyrex.maps.tools.ToolLoadout;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
@@ -121,5 +122,6 @@ public class ColorPallete {
         if(colorIndex >= colors.length) return;
 
         canvasManager.setCurrentColor(colors[colorIndex]);
+        ToolLoadout.recolor(canvasManager.getPainter(), colors[colorIndex]);
     }
 }

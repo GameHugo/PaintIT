@@ -3,42 +3,46 @@ package eu.skyrex.maps.tools;
 import eu.skyrex.Main;
 import eu.skyrex.maps.PaintTool;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerChangeHeldSlotEvent;
 import net.minestom.server.item.ItemComponent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.minestom.server.item.component.DyedItemColor;
 import org.jetbrains.annotations.NotNull;
+
+import java.awt.*;
 
 public class ToolLoadout implements EventListener<PlayerChangeHeldSlotEvent> {
 
-    public static final ItemStack BRUSH = ItemStack.builder(Material.STICK)
+    public static final ItemStack BRUSH = ItemStack.builder(Material.LEATHER_HORSE_ARMOR)
             .customModelData(1)
             .set(ItemComponent.ITEM_NAME, Component.text("Brush"))
             .build();
 
-    public static final ItemStack LINE = ItemStack.builder(Material.STICK)
+    public static final ItemStack LINE = ItemStack.builder(Material.LEATHER_HORSE_ARMOR)
             .customModelData(2)
             .set(ItemComponent.ITEM_NAME, Component.text("Line"))
             .build();
 
-    public static final ItemStack RECT = ItemStack.builder(Material.STICK)
+    public static final ItemStack RECT = ItemStack.builder(Material.LEATHER_HORSE_ARMOR)
             .customModelData(3)
             .set(ItemComponent.ITEM_NAME, Component.text("Rectangle"))
             .build();
 
-    public static final ItemStack ELLIPSE = ItemStack.builder(Material.STICK)
+    public static final ItemStack ELLIPSE = ItemStack.builder(Material.LEATHER_HORSE_ARMOR)
             .customModelData(4)
             .set(ItemComponent.ITEM_NAME, Component.text("Ellipse"))
             .build();
 
-    public static final ItemStack UNDO = ItemStack.builder(Material.STICK)
+    public static final ItemStack UNDO = ItemStack.builder(Material.LEATHER_HORSE_ARMOR)
             .customModelData(5)
             .set(ItemComponent.ITEM_NAME, Component.text("Undo"))
             .build();
 
-    public static final ItemStack REDO = ItemStack.builder(Material.STICK)
+    public static final ItemStack REDO = ItemStack.builder(Material.LEATHER_HORSE_ARMOR)
             .customModelData(6)
             .set(ItemComponent.ITEM_NAME, Component.text("Redo"))
             .build();
@@ -51,6 +55,16 @@ public class ToolLoadout implements EventListener<PlayerChangeHeldSlotEvent> {
         player.getInventory().addItemStack(UNDO);
         player.getInventory().addItemStack(REDO);
 
+    }
+
+    public static void recolor(Player player, Color color) {
+        player.getInventory().clear();
+        player.getInventory().addItemStack(BRUSH.with(ItemComponent.DYED_COLOR, new DyedItemColor(TextColor.color(color.getRGB()))));
+        player.getInventory().addItemStack(LINE.with(ItemComponent.DYED_COLOR, new DyedItemColor(TextColor.color(color.getRGB()))));
+        player.getInventory().addItemStack(RECT.with(ItemComponent.DYED_COLOR, new DyedItemColor(TextColor.color(color.getRGB()))));
+        player.getInventory().addItemStack(ELLIPSE.with(ItemComponent.DYED_COLOR, new DyedItemColor(TextColor.color(color.getRGB()))));
+        player.getInventory().addItemStack(UNDO.with(ItemComponent.DYED_COLOR, new DyedItemColor(TextColor.color(color.getRGB()))));
+        player.getInventory().addItemStack(REDO.with(ItemComponent.DYED_COLOR, new DyedItemColor(TextColor.color(color.getRGB()))));
     }
 
     @Override
