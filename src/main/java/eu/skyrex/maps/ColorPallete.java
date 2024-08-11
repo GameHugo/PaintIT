@@ -9,13 +9,16 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemComponent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.minestom.server.map.MapColors;
 import net.minestom.server.map.framebuffers.LargeGraphics2DFramebuffer;
 import net.minestom.server.network.packet.server.SendablePacket;
 import net.minestom.server.network.packet.server.play.MapDataPacket;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ColorPallete {
@@ -26,9 +29,23 @@ public class ColorPallete {
     private final CanvasManager canvasManager;
     private final Instance instance;
     private final LargeGraphics2DFramebuffer buf = new LargeGraphics2DFramebuffer(128 * width, 128 * height);
-    private final Color[] colors = new Color[] {
-            Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.PINK, Color.WHITE, Color.BLACK
-    };
+    private final Color[] colors = List.of(MapColors.COLOR_RED,
+            MapColors.COLOR_ORANGE,
+            MapColors.COLOR_YELLOW,
+            MapColors.COLOR_LIGHT_GREEN,
+            MapColors.COLOR_GREEN,
+            MapColors.COLOR_CYAN,
+            MapColors.COLOR_BLUE,
+            MapColors.COLOR_LIGHT_BLUE,
+            MapColors.COLOR_PINK,
+            MapColors.COLOR_MAGENTA,
+            MapColors.COLOR_PURPLE,
+            MapColors.COLOR_BROWN,
+            MapColors.COLOR_BLACK,
+            MapColors.COLOR_GRAY,
+            MapColors.COLOR_LIGHT_GRAY,
+            MapColors.SNOW
+            ).stream().map(c -> new Color(c.red(), c.green(), c.blue())).toArray(Color[]::new);
 
     public ColorPallete(CanvasManager canvasManager, final Instance instance) {
         this.instance = instance;
