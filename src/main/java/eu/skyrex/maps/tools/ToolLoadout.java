@@ -54,7 +54,7 @@ public class ToolLoadout implements EventListener<PlayerChangeHeldSlotEvent> {
         player.getInventory().addItemStack(ELLIPSE);
         player.getInventory().addItemStack(UNDO);
         player.getInventory().addItemStack(REDO);
-
+        recolor(player, Color.BLACK);
     }
 
     public static void recolor(Player player, Color color) {
