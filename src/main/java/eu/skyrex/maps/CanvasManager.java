@@ -64,7 +64,7 @@ public class CanvasManager {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 Entity itemFrame = new Entity(EntityType.ITEM_FRAME);
-                final Pos pos = new Pos(x, 45 + y, 0);
+                final Pos pos = new Pos(x + 1, 45 + y, 0);
 
                 itemFrame.setInstance(instance, pos);
 

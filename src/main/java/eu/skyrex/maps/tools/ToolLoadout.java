@@ -1,7 +1,6 @@
 package eu.skyrex.maps.tools;
 
 import eu.skyrex.Main;
-import eu.skyrex.maps.CanvasManager;
 import eu.skyrex.maps.PaintTool;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.entity.Player;
@@ -63,11 +62,6 @@ public class ToolLoadout implements EventListener<PlayerChangeHeldSlotEvent> {
     public @NotNull Result run(@NotNull PlayerChangeHeldSlotEvent event) {
 
         if(!event.getPlayer().equals(Main.getCanvasManager().getPainter())) return Result.SUCCESS;
-
-        for(int i = 0; i < 36; i++) {
-            if(event.getPlayer().getInventory().getItemStack(i) == null) continue;
-            CanvasManager.logger.info("slot {} not null", i);
-        }
 
         ItemStack itemStack = event.getPlayer().getInventory().getItemStack(event.getSlot());
         if (itemStack == null) return Result.SUCCESS;

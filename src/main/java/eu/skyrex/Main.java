@@ -25,12 +25,13 @@ import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
 import net.minestom.server.instance.LightingChunk;
-import net.minestom.server.instance.block.Block;
+import net.minestom.server.instance.anvil.AnvilLoader;
 import net.minestom.server.ping.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -53,7 +54,9 @@ public class Main {
         InstanceContainer instanceContainer = instanceManager.createInstanceContainer();
 
         // Set the ChunkGenerator
-        instanceContainer.setGenerator(unit -> unit.modifier().fillHeight(0, 40, Block.GRASS_BLOCK));
+        final File file = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile();
+        instanceContainer.setChunkLoader(new AnvilLoader(new File(file, "world").toPath()));
+        //instanceContainer.setGenerator(unit -> unit.modifier().fillHeight(0, 1, Block.AIR));
         instanceContainer.setChunkSupplier(LightingChunk::new);
 
         canvasManager = new CanvasManager(instanceContainer);
@@ -63,7 +66,7 @@ public class Main {
         globalEventHandler.addListener(AsyncPlayerConfigurationEvent.class, event -> {
             final Player player = event.getPlayer();
             event.setSpawningInstance(instanceContainer);
-            player.setRespawnPoint(new Pos(0, 42, 0));
+            player.setRespawnPoint(new Pos(10, 45, 5, 180, 0));
         });
 
         globalEventHandler.addListener(PlayerSpawnEvent.class, event -> {

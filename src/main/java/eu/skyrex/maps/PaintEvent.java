@@ -33,12 +33,12 @@ public class PaintEvent implements EventListener<PlayerUseItemEvent> {
 
         final Vec intersection = player.getPosition().asVec().add(direction.mul(factor));
 
-        if(intersection.x() < 0) return Result.INVALID;
-        if(intersection.x() >= 16) return Result.INVALID;
+        if(intersection.x() < 1) return Result.INVALID;
+        if(intersection.x() >= 17) return Result.INVALID;
         if(intersection.y() < 43) return Result.INVALID;
         if(intersection.y() > 54) return Result.INVALID;
 
-        final int x = (int) (intersection.x() * 128);
+        final int x = (int) ((intersection.x() - 1) * 128);
         final int y = (int) (1152 - (intersection.y() - 43.5) * 128);
 
         canvasManager.use(new Pixel(x, y));
