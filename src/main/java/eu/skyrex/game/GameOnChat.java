@@ -6,7 +6,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerChatEvent;
-import net.minestom.server.sound.SoundEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class GameOnChat implements EventListener<PlayerChatEvent> {
@@ -36,7 +35,6 @@ public class GameOnChat implements EventListener<PlayerChatEvent> {
         }
         if(gameManager.playerGuess(player, event.getMessage())) {
             event.setCancelled(true);
-            Main.getGameManager().playSoundEffect(SoundEvent.ENTITY_PLAYER_LEVELUP);
         }
         return Result.SUCCESS;
     }

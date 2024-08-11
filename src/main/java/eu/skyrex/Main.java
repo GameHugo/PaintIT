@@ -1,14 +1,8 @@
 package eu.skyrex;
 
-import eu.skyrex.commands.ColorCommand;
-import eu.skyrex.commands.HeapCommand;
-import eu.skyrex.commands.StopCommand;
-import eu.skyrex.commands.TestCommand;
-import eu.skyrex.commands.ToolCommand;
+import eu.skyrex.commands.*;
 import eu.skyrex.files.ServerProperties;
-import eu.skyrex.game.GameCommand;
-import eu.skyrex.game.GameManager;
-import eu.skyrex.game.GameOnChat;
+import eu.skyrex.game.*;
 import eu.skyrex.maps.CanvasManager;
 import eu.skyrex.maps.ColorEvent;
 import eu.skyrex.maps.ColorPallete;
@@ -91,6 +85,8 @@ public class Main {
         });
 
         globalEventHandler.addListener(new GameOnChat());
+        globalEventHandler.addListener(new GameOnJoin());
+        globalEventHandler.addListener(new GameOnLeave());
         globalEventHandler.addListener(new PaintEvent(canvasManager));
         globalEventHandler.addListener(new ToolLoadout());
         globalEventHandler.addListener(new ColorEvent(canvasManager, pallete));

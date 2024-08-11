@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
+import net.minestom.server.scoreboard.Sidebar;
 import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.timer.Scheduler;
 import net.minestom.server.timer.TaskSchedule;
@@ -18,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class GameManager {
@@ -26,10 +28,13 @@ public class GameManager {
     private boolean gameStarted = false;
     private String currentWord;
     private String previewWord;
-    private final List<Player> players = new ArrayList<>();
     private final List<Player> correctPlayers = new ArrayList<>();
+    private final Map<Player, Integer> scores = new java.util.HashMap<>();
+
+    private final Sidebar sidebar = new Sidebar(Component.text("PaintIT"));
 
     private int timeLeft;
+    private final List<Player> playersDrawn = new ArrayList<>();
 
     private final Random random = new Random();
     Logger logger = LoggerFactory.getLogger(GameManager.class);
@@ -41,10 +46,12 @@ public class GameManager {
         Scheduler scheduler = MinecraftServer.getSchedulerManager();
 
         scheduler.buildTask(() -> {
+            List<Player> players = new ArrayList<>(MinecraftServer.getConnectionManager().getOnlinePlayers());
             if (gameStarted) {
                 int revealInterval = Math.max(1, 150 / currentWord.length())+1;
                 if (timeLeft == 0) {
-                    stopGame();
+                    sendMessageToAllPlayers("<red>Time's up! The word was: " + currentWord);
+                    nextGame();
                     return;
                 }
                 timeLeft--;
@@ -66,20 +73,48 @@ public class GameManager {
                     sendGameActionBar(player);
                 }
             }
+            // Update the sidebar
+            for (Player player : players) {
+                int score = scores.getOrDefault(player, 0);
+                if (sidebar.getLine(player.getUuid().toString()) == null) {
+                    Sidebar.ScoreboardLine line = new Sidebar.ScoreboardLine(
+                            player.getUuid().toString(), Component.text(player.getUsername()), score);
+                    sidebar.createLine(line);
+                } else {
+                    sidebar.updateLineScore(player.getUuid().toString(), score);
+                }
+            }
         }).repeat(TaskSchedule.tick(20)).schedule();
     }
 
     public void startGame() {
         if (gameStarted) return;
+        playersDrawn.clear();
+        sendMessageToAllPlayers("<green>The game has started!");
+        nextGame();
+    }
+
+    public void nextGame() {
         timeLeft = 120;
         gameStarted = true;
-        players.clear();
         correctPlayers.clear();
-        players.addAll(MinecraftServer.getConnectionManager().getOnlinePlayers());
 
-        final Player drawer = players.get(random.nextInt(players.size()));
+        List<Player> players = new ArrayList<>(MinecraftServer.getConnectionManager().getOnlinePlayers());
+
+        Player drawer = null;
+        for (Player player : players) {
+            if (!playersDrawn.contains(player)) {
+                drawer = player;
+                break;
+            }
+        }
+        if (drawer == null) {
+            stopGame();
+            return;
+        }
         Main.getCanvasManager().setPainter(drawer);
         correctPlayers.add(drawer);
+        playersDrawn.add(drawer);
 
         Main.getCanvasManager().clearCanvas();
 
@@ -121,8 +156,19 @@ public class GameManager {
             player.sendMessage(MiniMessage.miniMessage().deserialize("<green>Correct!"));
             sendMessageToAllPlayers("<green>" + player.getUsername() + " has guessed the word!");
             sendGameActionBar(player);
-            if(correctPlayers.size() == players.size()) {
-                stopGame();
+            Main.getGameManager().playSoundEffect(SoundEvent.ENTITY_PLAYER_LEVELUP);
+            int score = scores.getOrDefault(player, 0);
+            if (correctPlayers.isEmpty()) {
+                score += 3;
+            } else if (correctPlayers.size() == 1) {
+                score += 2;
+            } else {
+                score += 1;
+            }
+            scores.put(player, scores.getOrDefault(player, 0) + score);
+            if(correctPlayers.size() == MinecraftServer.getConnectionManager().getOnlinePlayers().size()) {
+                sendMessageToAllPlayers("<green>Everyone has guessed the word! The word was: " + currentWord);
+                nextGame();
             }
             return true;
         }
@@ -131,14 +177,14 @@ public class GameManager {
 
     public void sendMessageToAllPlayers(String message) {
         Component msg = MiniMessage.miniMessage().deserialize(message);
-        for (Player player : players) {
+        for (Player player : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
             player.sendMessage(msg);
         }
     }
 
     public void sendActionBarToAllPlayers(String message) {
         Component msg = message == null ? Component.empty() : MiniMessage.miniMessage().deserialize(message);
-        for (Player player : players) {
+        for (Player player : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
             if (message == null) {
                 player.sendActionBar(msg);
                 return;
@@ -156,7 +202,7 @@ public class GameManager {
     }
 
     public void playSoundEffect(SoundEvent sound) {
-        for (Player player : players) {
+        for (Player player : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
             player.playSound(Sound.sound(sound, Sound.Source.RECORD, 1f, 1f));
         }
     }
@@ -172,6 +218,18 @@ public class GameManager {
         }
     }
 
+    public void addToSidebar(Player player) {
+        if(sidebar.getViewers().contains(player)) return;
+        sidebar.addViewer(player);
+    }
+
+    public void removeFromSidebar(Player player) {
+        if(sidebar.getViewers().contains(player))
+            sidebar.removeViewer(player);
+        if(sidebar.getLine(player.getUuid().toString()) != null)
+            sidebar.removeLine(player.getUuid().toString());
+    }
+
     public boolean playerCorrect(Player player) {
         return correctPlayers.contains(player);
     }
@@ -184,7 +242,4 @@ public class GameManager {
         return currentWord;
     }
 
-    public List<Player> getPlayers() {
-        return players;
-    }
 }
