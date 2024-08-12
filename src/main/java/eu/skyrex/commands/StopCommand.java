@@ -1,6 +1,7 @@
 package eu.skyrex.commands;
 
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.command.ConsoleSender;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.entity.Player;
 import net.minestom.server.instance.Instance;
@@ -11,7 +12,7 @@ public class StopCommand extends Command {
     public StopCommand() {
         super("stop");
 
-        //setCondition((sender, commandString) -> sender.hasPermission("server.stop") || sender instanceof ConsoleSender);
+        setCondition((sender, commandString) -> sender.hasPermission("server.stop") || sender instanceof ConsoleSender);
 
         setDefaultExecutor((sender, context) -> {
             sender.sendMessage("Stopping the server...");
