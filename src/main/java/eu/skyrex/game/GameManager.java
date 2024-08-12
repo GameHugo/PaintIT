@@ -2,6 +2,7 @@ package eu.skyrex.game;
 
 import eu.skyrex.Main;
 import eu.skyrex.maps.tools.BrushTool;
+import eu.skyrex.util.Resources;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -42,8 +43,10 @@ public class GameManager {
     Logger logger = LoggerFactory.getLogger(GameManager.class);
 
     public GameManager() {
-        final File file = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile();
-        wordsFile = new File(file, "words.txt");
+        wordsFile = Resources.getFileFromResource("/words.txt");
+        if (!wordsFile.exists()) {
+            throw new RuntimeException("Could not find words file.");
+        }
 
         Scheduler scheduler = MinecraftServer.getSchedulerManager();
 
@@ -220,7 +223,7 @@ public class GameManager {
             stream.getChannel().position(0);
             return reader.lines().skip(random.nextLong(length)).findFirst().orElseThrow();
         } catch (Exception e) {
-            throw new RuntimeException("Could not find a word. Please add a words.txt file to the server directory.", e);
+            throw new RuntimeException("Could not find a word.", e);
         }
     }
 
