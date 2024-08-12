@@ -51,6 +51,7 @@ public class Main {
         InstanceManager instanceManager = MinecraftServer.getInstanceManager();
         InstanceContainer instanceContainer = instanceManager.createInstanceContainer();
 
+        instanceContainer.setTimeRate(0);
         // Set the ChunkGenerator
         instanceContainer.setChunkLoader(new AnvilLoader(String.valueOf(Resources.getFolderFromZipResource("/world.zip"))));
         //instanceContainer.setGenerator(unit -> unit.modifier().fillHeight(0, 1, Block.AIR));
