@@ -33,7 +33,7 @@ public class GameManager {
     private final List<Player> correctPlayers = new ArrayList<>();
     private final Map<Player, Integer> scores = new java.util.HashMap<>();
 
-    private final Sidebar sidebar = new Sidebar(Component.text("PaintIT"));
+    private final Sidebar sidebar = new Sidebar(MiniMessage.miniMessage().deserialize("<aqua>PaintIT"));
 
     private int timeLeft;
     private final List<Player> playersDrawn = new ArrayList<>();
@@ -161,7 +161,6 @@ public class GameManager {
     public boolean playerGuess(Player player, String guess) {
         if (!gameStarted) return false;
         if (guess.equalsIgnoreCase(currentWord)) {
-            correctPlayers.add(player);
             player.sendMessage(MiniMessage.miniMessage().deserialize("<green>Correct!"));
             sendMessageToAllPlayers("<green>" + player.getUsername() + " has guessed the word!");
             sendGameActionBar(player);
@@ -174,6 +173,7 @@ public class GameManager {
             } else {
                 score += 1;
             }
+            correctPlayers.add(player);
             scores.put(player, scores.getOrDefault(player, 0) + score);
             if(correctPlayers.size() == MinecraftServer.getConnectionManager().getOnlinePlayers().size()) {
                 sendMessageToAllPlayers("<green>Everyone has guessed the word! The word was: " + currentWord);
