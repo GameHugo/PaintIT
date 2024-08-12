@@ -8,6 +8,7 @@ import eu.skyrex.maps.ColorEvent;
 import eu.skyrex.maps.ColorPallete;
 import eu.skyrex.maps.PaintEvent;
 import eu.skyrex.maps.tools.ToolLoadout;
+import eu.skyrex.util.Resources;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
@@ -29,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -39,7 +39,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         Logger logger = LoggerFactory.getLogger(Main.class);
-
 
         final long startTime = System.currentTimeMillis();
 
@@ -53,8 +52,7 @@ public class Main {
         InstanceContainer instanceContainer = instanceManager.createInstanceContainer();
 
         // Set the ChunkGenerator
-        final File file = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile();
-        instanceContainer.setChunkLoader(new AnvilLoader(new File(file, "world").toPath()));
+        instanceContainer.setChunkLoader(new AnvilLoader(String.valueOf(Resources.getFolderFromZipResource("/world.zip"))));
         //instanceContainer.setGenerator(unit -> unit.modifier().fillHeight(0, 1, Block.AIR));
         instanceContainer.setChunkSupplier(LightingChunk::new);
 
