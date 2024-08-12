@@ -80,7 +80,7 @@ public class GameManager {
             }
             // Update the sidebar
             for (Player player : players) {
-                if(sidebar.getLines().size() < 15) {
+                if(sidebar.getLines().size() > 15) {
                     continue;
                 }
                 int score = scores.getOrDefault(player, 0);
