@@ -14,6 +14,7 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemComponent;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.minestom.server.map.Framebuffer;
 import net.minestom.server.map.framebuffers.LargeGraphics2DFramebuffer;
 import net.minestom.server.network.packet.server.SendablePacket;
 import net.minestom.server.network.packet.server.play.MapDataPacket;
@@ -37,6 +38,7 @@ public class CanvasManager {
 
     private Color currentColor = Color.BLACK;
 
+    private BufferedImage lastSent = null;
     private WeakReference<Player> player = new WeakReference<>(null);
     private boolean drawn = false;
     private Stack<BufferedImage> renderedImage;
@@ -106,7 +108,7 @@ public class CanvasManager {
                 return;
             }
             tool.tick(this, target);
-        }, TaskSchedule.nextTick(), TaskSchedule.tick(10), ExecutionType.TICK_START);
+        }, TaskSchedule.nextTick(), TaskSchedule.tick(2), ExecutionType.TICK_START);
     }
 
     public Graphics2D getGraphics() {
@@ -118,6 +120,8 @@ public class CanvasManager {
         Set<SendablePacket> packets = new HashSet<>();
         for (int x = 0; x < width; x++) {
             for (int y = height - 1; y >= 0; y--) {
+                if(validateSend(x * 128, y * 128)) continue;
+
                 final int mapId = width * y + x + 1;
                 final MapDataPacket packet = buf.preparePacket(mapId, x * 128, y * 128);
                 packets.add(packet);
@@ -126,6 +130,11 @@ public class CanvasManager {
         for (@NotNull Player player : instance.getPlayers()) {
             player.sendPackets(packets);
         }
+
+        lastSent = new BufferedImage(128 * width, 128 * height, BufferedImage.TYPE_INT_RGB);
+        final Graphics2D graphics2D = lastSent.createGraphics();
+        graphics2D.drawImage(buf.getBackingImage(), 0, 0, null);
+        graphics2D.dispose();
     }
 
     public void sendPackets(Player player) {
@@ -138,6 +147,19 @@ public class CanvasManager {
             }
         }
         player.sendPackets(packets);
+    }
+
+    private boolean validateSend(int left, int top) {
+        if(lastSent == null) return false;
+
+        final int width = Framebuffer.WIDTH;
+        final int height = Framebuffer.HEIGHT;
+        for (int y = top; y < top+height; y++) {
+            for (int x = left; x < left+width; x++) {
+                if(buf.getBackingImage().getRGB(x, y) != lastSent.getRGB(x, y)) return false;
+            }
+        }
+        return true;
     }
 
     private Pixel getTargetPosition() {
