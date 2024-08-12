@@ -93,7 +93,6 @@ public class Main {
         MinecraftServer.setBrandName("§3PaintIT§r");
 
         MinecraftServer.getCommandManager().register(new StopCommand());
-        MinecraftServer.getCommandManager().register(new TestCommand(instanceContainer));
         MinecraftServer.getCommandManager().register(new GameCommand());
         MinecraftServer.getCommandManager().register(new ColorCommand());
         MinecraftServer.getCommandManager().register(new ToolCommand());
