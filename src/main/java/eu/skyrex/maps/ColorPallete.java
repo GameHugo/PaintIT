@@ -45,6 +45,22 @@ public class ColorPallete {
             MapColors.COLOR_BLACK,
             MapColors.COLOR_GRAY,
             MapColors.COLOR_LIGHT_GRAY,
+            MapColors.SNOW,
+            MapColors.COLOR_RED,
+            MapColors.COLOR_ORANGE,
+            MapColors.COLOR_YELLOW,
+            MapColors.COLOR_LIGHT_GREEN,
+            MapColors.COLOR_GREEN,
+            MapColors.COLOR_CYAN,
+            MapColors.COLOR_BLUE,
+            MapColors.COLOR_LIGHT_BLUE,
+            MapColors.COLOR_PINK,
+            MapColors.COLOR_MAGENTA,
+            MapColors.COLOR_PURPLE,
+            MapColors.COLOR_BROWN,
+            MapColors.COLOR_BLACK,
+            MapColors.COLOR_GRAY,
+            MapColors.COLOR_LIGHT_GRAY,
             MapColors.SNOW
             ).stream().map(c -> new Color(c.red(), c.green(), c.blue())).toArray(Color[]::new);
 
@@ -80,7 +96,7 @@ public class ColorPallete {
 
         for(int i = 0; i < colors.length && i < 32; i++) {
             graphics2D.setColor(colors[i]);
-            int mod = i > 16 ? 128 : 0;
+            int mod = i >= 16 ? 128 : 0;
             graphics2D.fillRect(i * 128 - mod * 16, mod, 128, 128);
         }
 

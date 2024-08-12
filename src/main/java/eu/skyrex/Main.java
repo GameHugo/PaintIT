@@ -10,6 +10,7 @@ import eu.skyrex.maps.PaintEvent;
 import eu.skyrex.maps.tools.ToolLoadout;
 import eu.skyrex.util.Resources;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.ConsoleSender;
@@ -54,7 +55,6 @@ public class Main {
         instanceContainer.setTimeRate(0);
         // Set the ChunkGenerator
         instanceContainer.setChunkLoader(new AnvilLoader(String.valueOf(Resources.getFolderFromZipResource("/world.zip"))));
-        //instanceContainer.setGenerator(unit -> unit.modifier().fillHeight(0, 1, Block.AIR));
         instanceContainer.setChunkSupplier(LightingChunk::new);
 
         canvasManager = new CanvasManager(instanceContainer);
@@ -79,8 +79,8 @@ public class Main {
 
         globalEventHandler.addListener(ServerListPingEvent.class, event -> {
             ResponseData responseData = event.getResponseData();
-            responseData.setMaxPlayer(69);
-            responseData.setDescription(Component.text("PaintIT"));
+            responseData.setMaxPlayer(100);
+            responseData.setDescription(Component.text("PaintIT", NamedTextColor.AQUA));
         });
 
         globalEventHandler.addListener(new GameOnChat());
@@ -90,7 +90,7 @@ public class Main {
         globalEventHandler.addListener(new ToolLoadout());
         globalEventHandler.addListener(new ColorEvent(canvasManager, pallete));
 
-        MinecraftServer.setBrandName("PaintIT");
+        MinecraftServer.setBrandName("§3PaintIT§r");
 
         MinecraftServer.getCommandManager().register(new StopCommand());
         MinecraftServer.getCommandManager().register(new TestCommand(instanceContainer));
