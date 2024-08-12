@@ -80,6 +80,9 @@ public class GameManager {
             }
             // Update the sidebar
             for (Player player : players) {
+                if(sidebar.getLines().size() < 15) {
+                    continue;
+                }
                 int score = scores.getOrDefault(player, 0);
                 if (sidebar.getLine(player.getUuid().toString()) == null) {
                     Sidebar.ScoreboardLine line = new Sidebar.ScoreboardLine(
@@ -174,7 +177,7 @@ public class GameManager {
                 score += 1;
             }
             correctPlayers.add(player);
-            scores.put(player, scores.getOrDefault(player, 0) + score);
+            scores.put(player, score);
             if(correctPlayers.size() == MinecraftServer.getConnectionManager().getOnlinePlayers().size()) {
                 sendMessageToAllPlayers("<green>Everyone has guessed the word! The word was: " + currentWord);
                 nextGame();
