@@ -95,9 +95,6 @@ public class Main {
 
         MinecraftServer.getCommandManager().register(new StopCommand());
         MinecraftServer.getCommandManager().register(new GameCommand());
-        MinecraftServer.getCommandManager().register(new ColorCommand());
-        MinecraftServer.getCommandManager().register(new ToolCommand());
-        MinecraftServer.getCommandManager().register(new HeapCommand());
 
         if(serverProperties.isOnlineMode())
             MojangAuth.init();
