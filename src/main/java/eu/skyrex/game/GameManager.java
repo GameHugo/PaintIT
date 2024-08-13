@@ -111,6 +111,7 @@ public class GameManager {
 
         drawer = null;
         for (Player player : players) {
+            player.getInventory().clear();
             if (!playersDrawn.contains(player)) {
                 drawer = player;
                 break;
