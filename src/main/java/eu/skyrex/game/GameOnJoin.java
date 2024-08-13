@@ -50,8 +50,8 @@ public class GameOnJoin implements EventListener<PlayerSpawnEvent> {
         event.getPlayer().setInvisible(true);
         team.addMember(((TextComponent)event.getPlayer().getName()).content());
 
-        URI uri = URI.create("https://download.mc-packs.net/pack/c121153069e3daabd2d369e5b3a6ebdfe04bb3c9.zip");
-        ResourcePackInfo pack = ResourcePackInfo.resourcePackInfo(resourcePackId, uri, "c121153069e3daabd2d369e5b3a6ebdfe04bb3c9");
+        URI uri = URI.create("https://download.mc-packs.net/pack/419bbf0bfd629fcbbfa9aff111bab629a7f7e1d4.zip");
+        ResourcePackInfo pack = ResourcePackInfo.resourcePackInfo(resourcePackId, uri, "419bbf0bfd629fcbbfa9aff111bab629a7f7e1d4");
         event.getPlayer().sendResourcePacks(ResourcePackRequest.resourcePackRequest().packs(pack));
         return Result.SUCCESS;
     }
