@@ -18,11 +18,14 @@ public class GameCommand extends Command {
 
         addSyntax((sender, context) -> {
             final String start = context.get(startArg);
-            if(start.equals("start")) {
+            if (start.equals("start")) {
                 Main.getGameManager().startGame();
             } else {
                 sender.sendMessage("Unknown argument");
             }
         }, startArg);
+        addSyntax((sender, context) -> {
+            Main.getGameManager().stopGame();
+        }, ArgumentType.Literal("stop"));
     }
 }
