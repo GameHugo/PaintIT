@@ -46,7 +46,7 @@ public class GameOnJoin implements EventListener<PlayerSpawnEvent> {
                     "<green>The game has already started, you just automatically join. Good luck!"));
         }
 
-        event.getPlayer().setInvisible(false);
+        event.getPlayer().setInvisible(true);
         team.addMember(((TextComponent)event.getPlayer().getName()).content());
 
         URI uri = URI.create("https://download.mc-packs.net/pack/c121153069e3daabd2d369e5b3a6ebdfe04bb3c9.zip");
