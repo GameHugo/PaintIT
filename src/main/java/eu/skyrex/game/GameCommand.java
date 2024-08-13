@@ -1,6 +1,7 @@
 package eu.skyrex.game;
 
 import eu.skyrex.Main;
+import net.minestom.server.command.ConsoleSender;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentLiteral;
 import net.minestom.server.command.builder.arguments.ArgumentType;
@@ -25,7 +26,11 @@ public class GameCommand extends Command {
             }
         }, startArg);
         addSyntax((sender, context) -> {
-            Main.getGameManager().stopGame();
+            if(sender.hasPermission("game.stop") || sender instanceof ConsoleSender) {
+                Main.getGameManager().stopGame();
+            } else {
+                sender.sendMessage("You don't have permission to stop the game");
+            }
         }, ArgumentType.Literal("stop"));
     }
 }
