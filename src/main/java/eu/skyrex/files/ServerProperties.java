@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class ServerProperties {
     private int port = 25565;
     private String ip = "0.0.0.0";
+    private boolean onlineMode = false;
 
     Logger logger = LoggerFactory.getLogger(ServerProperties.class);
 
@@ -24,6 +25,8 @@ public class ServerProperties {
                         port = Integer.parseInt(line.substring(12));
                     } else if(line.startsWith("server-ip=")) {
                         ip = line.substring(10);
+                    } else if(line.startsWith("online-mode=")) {
+                        onlineMode = Boolean.parseBoolean(line.substring(12));
                     }
                 }
             } catch (FileNotFoundException e) {
@@ -39,5 +42,9 @@ public class ServerProperties {
 
     public String getIp() {
         return ip;
+    }
+
+    public boolean isOnlineMode() {
+        return onlineMode;
     }
 }

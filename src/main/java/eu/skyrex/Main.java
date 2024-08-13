@@ -53,6 +53,7 @@ public class Main {
         InstanceContainer instanceContainer = instanceManager.createInstanceContainer();
 
         instanceContainer.setTimeRate(0);
+        instanceContainer.setTime(6000);
         // Set the ChunkGenerator
         instanceContainer.setChunkLoader(new AnvilLoader(String.valueOf(Resources.getFolderFromZipResource("/world.zip"))));
         instanceContainer.setChunkSupplier(LightingChunk::new);
@@ -98,7 +99,8 @@ public class Main {
         MinecraftServer.getCommandManager().register(new ToolCommand());
         MinecraftServer.getCommandManager().register(new HeapCommand());
 
-        MojangAuth.init();
+        if(serverProperties.isOnlineMode())
+            MojangAuth.init();
 
         // Start the server
         minecraftServer.start(serverProperties.getIp(), serverProperties.getPort());
