@@ -15,7 +15,7 @@ Team members:
 Min player(s): 2
 Max players: 16
 Spec notes: Low Latency, High Bandwidth
-Other notes: You can start the game by typing /game start.
+Other notes: You can start the game by typing /game start, and you can stop the game by typing /game stop in console
   The server supports a server.properties file where you can put the server-ip and server-port.
   The server.properties file needs be in the same directory as the jar file.
 ```
