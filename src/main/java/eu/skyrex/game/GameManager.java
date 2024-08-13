@@ -171,9 +171,9 @@ public class GameManager {
             sendGameActionBar(player);
             Main.getGameManager().playSoundEffect(SoundEvent.ENTITY_PLAYER_LEVELUP);
             int score = scores.getOrDefault(player, 0);
-            if (correctPlayers.isEmpty()) {
+            if (correctPlayers.size() < 2) {
                 score += 3;
-            } else if (correctPlayers.size() == 1) {
+            } else if (correctPlayers.size() < 3) {
                 score += 2;
             } else {
                 score += 1;
