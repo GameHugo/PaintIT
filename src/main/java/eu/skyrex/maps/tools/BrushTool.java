@@ -6,7 +6,7 @@ import eu.skyrex.maps.Pixel;
 
 public class BrushTool implements PaintTool {
 
-    int strokeSize = 100;
+    int strokeSize = 50;
     int count;
 
     @Override

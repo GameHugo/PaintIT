@@ -10,7 +10,7 @@ public class LineTool implements PaintTool {
 
     private Pixel start = null;
 
-    int strokeSize = 100;
+    int strokeSize = 50;
 
     @Override
     public void tick(CanvasManager canvasManager, Pixel pos) {
