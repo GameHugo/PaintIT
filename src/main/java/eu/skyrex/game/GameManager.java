@@ -145,6 +145,7 @@ public class GameManager {
 
         sendMessageToAllPlayers("<yellow>" + drawer.getUsername() + " is drawing!");
         logger.info("The current word is: {}", currentWord);
+        drawer.sendMessage(MiniMessage.miniMessage().deserialize("<yellow>You are drawing the word: <green>" + currentWord));
         for (Player player : players) {
             sendGameActionBar(player);
         }
