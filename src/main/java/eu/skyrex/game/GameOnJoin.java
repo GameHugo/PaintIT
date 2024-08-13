@@ -46,6 +46,7 @@ public class GameOnJoin implements EventListener<PlayerSpawnEvent> {
                     "<green>The game has already started, you just automatically join. Good luck!"));
         }
 
+        event.getPlayer().sendPacket(team.createTeamsCreationPacket());
         event.getPlayer().setInvisible(true);
         team.addMember(((TextComponent)event.getPlayer().getName()).content());
 
