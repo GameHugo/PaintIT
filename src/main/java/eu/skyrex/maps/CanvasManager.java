@@ -17,6 +17,7 @@ import net.minestom.server.item.Material;
 import net.minestom.server.map.Framebuffer;
 import net.minestom.server.map.framebuffers.LargeGraphics2DFramebuffer;
 import net.minestom.server.network.packet.server.SendablePacket;
+import net.minestom.server.network.packet.server.play.BundlePacket;
 import net.minestom.server.network.packet.server.play.MapDataPacket;
 import net.minestom.server.timer.ExecutionType;
 import net.minestom.server.timer.TaskSchedule;
@@ -108,7 +109,7 @@ public class CanvasManager {
                 return;
             }
             tool.tick(this, target);
-        }, TaskSchedule.nextTick(), TaskSchedule.tick(2), ExecutionType.TICK_START);
+        }, TaskSchedule.nextTick(), TaskSchedule.tick(1), ExecutionType.TICK_START);
     }
 
     public Graphics2D getGraphics() {
@@ -128,7 +129,9 @@ public class CanvasManager {
             }
         }
         for (@NotNull Player player : instance.getPlayers()) {
+            player.sendPacket(new BundlePacket());
             player.sendPackets(packets);
+            player.sendPacket(new BundlePacket());
         }
 
         lastSent = new BufferedImage(128 * width, 128 * height, BufferedImage.TYPE_INT_RGB);
